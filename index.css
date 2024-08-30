@@ -48,3 +48,10 @@
     margin: 4px;
     cursor: pointer;
 }
+.login{
+ padding: 0px 20px;
+ cursor: pointer;
+}
+.filter{
+    display: flex;
+}
