@@ -1,10 +1,13 @@
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import { useEffect, useState } from "react";
 import resList from "../utils/mockData";
 import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   // Local State Variable - Super powerful variable
+
+  const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
+
   const [listOfRestaurants, setListOfRestraunt] = useState(resList);
   const [searchText, setSearchText] = useState(" ");
   const [filteredRestaurant, setFilteredRestaurant] = useState(resList);
@@ -30,18 +33,19 @@ const Body = () => {
   }
 
   return (
-    <div className="body">
-      <div className="filter">
-        <div className="search">
+    <div>
+      <div className="flex">
+        <div className="search m-4 p-4">
           <input
             type="text"
-            className="search-box"
+            className="bg-gray-300  border-solid"
             value={searchText}
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
           />
           <button
+            className="px-4 py-2 bg-green-100 m-4 rounded-lg"
             onClick={() => {
               const filteredRestaurant = listOfRestaurants.filter((res) =>
                 res.data.name.includes(searchText)
@@ -52,21 +56,28 @@ const Body = () => {
             Search
           </button>
         </div>
-        <button
-          className="filter-btn"
-          onClick={() => {
-            const filteredList = listOfRestaurants.filter(
-              (res) => res.data.avgRating > 4
-            );
-            setListOfRestraunt(filteredList);
-          }}
-        >
-          Top Rated Restaurants
-        </button>
+        <div className="search m-4 p-4 flex items-center">
+          <button
+            className="px-4 py-2 bg-gray-100 rounded-lg"
+            onClick={() => {
+              const filteredList = listOfRestaurants.filter(
+                (res) => res.data.avgRating > 4
+              );
+              setListOfRestraunt(filteredList);
+            }}
+          >
+            Top Rated Restaurants
+          </button>
+        </div>
       </div>
-      <div className="res-container">
+      <div className="flex">
+        {console.log("Filtered Restaurant", listOfRestaurants)}
         {filteredRestaurant.map((restaurant) => (
-          <RestaurantCard key={restaurant.data.id} resData={restaurant} />
+          // If Restaurant is promoted add a promoted Label to it
+          restaurant.data.promoted?<RestaurantCardPromoted resData={restaurant}/>:<RestaurantCard key={restaurant.data.id} resData={restaurant} />
+
+         
+         
         ))}
       </div>
     </div>
