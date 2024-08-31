@@ -1,4 +1,4 @@
-import React, { lazy,Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 import Body from "./components/Body";
@@ -8,15 +8,29 @@ import Contact from "./components/Contact";
 import Error from "./components/Error";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 //import Grocery from "./components/Grocery";
+import UserContext from "./utils/userContext";
 
-const Grocery = lazy(()=>import("./components/Grocery"))
+const Grocery = lazy(() => import("./components/Grocery"));
+
 
 const AppLayout = () => {
+  const[userName ,setuserName] = useState()
+  useEffect(() => {
+    // Make an API call and send username and password
+    const data = {
+      name: "Mohd Firoj",
+    };
+    setuserName(data.name);
+  }, []);
+
   return (
+    // changing the value of context
+    <UserContext.Provider value={{loggedInUser:userName,setuserName}}>
     <div className="app">
       <Header />
       <Outlet />
     </div>
+    </UserContext.Provider>
   );
 };
 
@@ -39,7 +53,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/grocery",
-        element: <Suspense fallback={<h1>Loading ...</h1>}><Grocery /></Suspense>,
+        element: (
+          <Suspense fallback={<h1>Loading ...</h1>}>
+            <Grocery />
+          </Suspense>
+        ),
       },
     ],
     errorElement: <Error />,
